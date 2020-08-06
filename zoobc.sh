@@ -1,32 +1,8 @@
 #!/bin/bash
 
-# ZOOBC INSTALLER SCRIPT
-# version: v1
-# Description: Installation script for zoobc node. A simple script allowing to download th binary and generating configuration file
-# ------------------------------------------------------------------------------------------------------------------------------
-
-# -----------------
-# VARIABLES
-# -----------------
-zbc_dir=zoobc
-zbc_config=config.toml
-zbc_binary=zoobc
-
-peerPort=8001
-apiRPCPort=7000
-apiHTTPPort=7001
-smithing=true
-wellknownPeers=
-declare -a peersInput
-
-# -----------------
-# UTILS
-# -----------------
-# join array by limiter
-function join_by { local IFS="$1"; shift; echo "$*"; }
-
-# check os for installation purpose
-function get_platform(){
+dir=zoobc
+# platform will check os for installation purposes
+function platform(){
 os="$(uname)"
 case $os in
 'Darwin')
@@ -47,11 +23,11 @@ esac
 echo "$os"
 }
 
-# check and install curl for installation purpose
+# check and install curl
 function install_curl(){
 if ! curl --version &> /dev/null; then
-	echo "DOWNLOADING CURL ..."
-	case $(get_platform) in
+	echo "DOWNLOADING CURL"
+	case $(platform) in
 		'mac')
 			brew install curl;;
 		'linux')
@@ -63,74 +39,15 @@ fi
 
 # downloading binary file from host
 function download_binary(){
-if [ ! -f ~/${zbc_dir}/${zbc_binary} ]; then 
-  echo "DOWNLOADING BINARY ..."
-  # shellcheck disable=SC2046
-  cd ~/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/zoobc
-  chmod 755 ~/${zbc_dir}/zoobc
-fi
+	echo "DOWNLOADING BINARY"
+	# shellcheck disable=SC2088
+	mkdir ~/${dir}
+	# shellcheck disable=SC2046
+	cd ~/${dir} && curl -O http://172.104.47.168/$(platform)/zoobc
+	chmod 755 ~/${dir}/zoobc
 }
 
-
-# checking the depends files like configuration files and more stuff
-function checking_depends(){
-if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
-  #touch ~/$zbc_dir/$zbc_config
-  read -p 'PEER PORT: ' peerPort
-  if [[ -n ${peerPort//[0-9]/} ]]; then
-    echo "Invalid input, must be a number"
-    exit 2
-  fi
-  read -p 'API RPC PORT: ' apiRPCPort
-  if [[ -n ${peerPort//[0-9]/} ]]; then
-    echo "Invalid input, must be a number"
-    exit 2
-  fi
-  read -p 'API HTTP PORT: ' apiHTTPPort
-  if [[ -n ${peerPort//[0-9]/} ]]; then
-    echo "Invalid input, must be a number"
-    exit 2
-  fi
-  read -p 'SMITHING, TRUE|FALSE? '  smithing
-  read -p 'WELLKNOWN PEERS, SEPARATED BY SPACE: ' peersInput
-  echo
-
-  # separating peers input
-  wellknownPeers=$(join_by , $peersInput)
-
-  # shellcheck disable=SC1044
-  cat > ${zbc_config} <<EOF
-resourcePath="./resource"
-dbName="zoobc.db"
-badgerDBName="zoobc.kv/"
-nodeKeyFile="node_keys.json"
-snapshotPath="./resource/snapshots"
-
-peerPort=$peerPort
-apiRPCPort=$apiRPCPort
-apiHTTPPort=$apiHTTPPort
-monitoringPort=9090
-cpuProfilingPort=6060
-
-maxAPIRequestPerSecond=10
-apiReqTimeoutSec=2
-smithing=$smithing
-proofOfOwnershipReqTimeoutSec=2
-
-wellknownPeers=[$wellknownPeers]
-ownerAccountAddress=""
-logLevels=["panic"]
-EOF
-
-cp $zbc_config ~/$zbc_dir/$zbc_config
-fi
-}
-
-if [ ! -d ~/$zbc_dir ]; then 
-  mkdir ~/$zbc_dir
-fi
-
-if install_curl; download_binary; checking_depends; then
-#  cd ~/${zbc_dir} && ./zoobc
-	printf "Finish\nZOOBC directory is $zbc_dir"
+if install_curl; download_binary; then
+  cd ~/${dir} && ./zoobc
+#	printf "Finish\nNow run the app"
 fi
