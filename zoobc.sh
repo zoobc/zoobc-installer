@@ -14,6 +14,7 @@ apiHTTPPort=7001
 smithing=true
 wellknownPeers=
 declare -a peersInput
+ownerAccountAddress=
 
 # join array by limiter
 function join_by { local IFS="$1"; shift; echo "$*"; }
@@ -82,13 +83,15 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
     echo "Invalid input, must be a number"
     exit 2
   fi
+  read -p 'OWNER ACCOUNT ADDRESS": ' ownerAccountAddress
+
   read -p 'SMITHING, TRUE|FALSE? '  smithing
   read -p 'WELLKNOWN PEERS, SEPARATED BY SPACE: ' peersInput
   echo
 
   # separating peers input
   wellknownPeers=$(join_by , $peersInput)
-
+  
   # shellcheck disable=SC1044
   cat > ${zbc_config} <<EOF
 resourcePath="./resource"
@@ -109,7 +112,7 @@ smithing=$smithing
 proofOfOwnershipReqTimeoutSec=2
 
 wellknownPeers=[$wellknownPeers]
-ownerAccountAddress=""
+ownerAccountAddress="$ownerAccountAddress"
 logLevels=["panic"]
 EOF
 
