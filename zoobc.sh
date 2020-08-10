@@ -15,7 +15,7 @@ smithing=true
 wellknownPeers=
 declare -a peersInput
 ownerAccountAddress=
-
+nodeSeed=
 # join array by limiter
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
@@ -83,9 +83,9 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
     echo "Invalid input, must be a number"
     exit 2
   fi
-  read -p 'OWNER ACCOUNT ADDRESS": ' ownerAccountAddress
-
-  read -p 'SMITHING, TRUE|FALSE? '  smithing
+  read -p 'OWNER ACCOUNT ADDRESS: ' ownerAccountAddress
+  read -p 'HAVE NODE`S SEED TO USE ? EMPTY WILL GENERATE ONE FOR YOU? ' nodeSeed
+  #read -p 'SMITHING, TRUE|FALSE? '  smithing
   read -p 'WELLKNOWN PEERS, SEPARATED BY SPACE: ' peersInput
   echo
 
@@ -124,7 +124,11 @@ fi
 if [ ! -d ~/$zbc_dir ]; then
   mkdir ~/$zbc_dir
 fi
-if install_curl; download_binary; then
-  cd ~/${zbc_dir} && ./$zbc_binary
-#	printf "Finish\nNow run the app"
+
+if checking_depends; then 
+  echo "FINISH, SMITTHING TRUE AS DEFAULT. CHECK INSIDE ~/$zbc_dir/$zbc_config"
 fi
+#if install_curl; download_binary; then
+  #cd ~/${zbc_dir} && ./$zbc_binary
+##	printf "Finish\nNow run the app"
+#fi
