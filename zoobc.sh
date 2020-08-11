@@ -5,8 +5,11 @@
 # Description: Installation script for zoobc node. A simple script allowing to download th binary and generating configuration file
 # ------------------------------------------------------------------------------------------------------------------------------
 zbc_dir=zoobc
+zbc_resource=resource
 zbc_config=config.toml
 zbc_binary=zoobc
+zbc_cmd_binary=zcmd
+zbc_node_key=node_keys.json
 
 peerPort=8001
 apiRPCPort=7000
@@ -16,6 +19,7 @@ wellknownPeers=
 declare -a peersInput
 ownerAccountAddress=
 nodeSeed=
+
 # join array by limiter
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
@@ -58,15 +62,24 @@ fi
 # downloading binary file from host
 function download_binary(){
 if [ ! -f ~/${zbc_dir}/${zbc_binary} ]; then
-  echo "DOWNLOADING BINARY ..."
+  echo "DOWNLOADING ZOOBC BINARY ..."
   # shellcheck disable=SC2046
   cd ~/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_binary
-  chmod 755 ~/${zbc_dir}/zbc_binary
+  chmod 755 ~/${zbc_dir}/${zbc_binary}
+fi
+if [ ! -f ~/${zbc_dir}/${zbc_cmd_binary} ]; then 
+  echo "DOWNLOADING ZOOBC CMD BINARY ..."
+  # shellcheck disable=SC2046
+  cd ~/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_cmd_binary
+  chmod 755 ~/${zbc_dir}/${zbc_cmd_binary}
 fi
 }
 
 # checking the depends files like configuration files and more stuff
 function checking_depends(){
+if [ ! -d ~/${zbc_dir}/{$zbc_resource} ]; then 
+  mkdir ~/${zbc_dir}/${zbc_resource}
+fi
 if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
   read -p 'PEER PORT: ' peerPort
   if [[ -n ${peerPort//[0-9]/} ]]; then
@@ -84,7 +97,6 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
     exit 2
   fi
   read -p 'OWNER ACCOUNT ADDRESS: ' ownerAccountAddress
-  read -p 'HAVE NODE`S SEED TO USE ? EMPTY WILL GENERATE ONE FOR YOU? ' nodeSeed
   #read -p 'SMITHING, TRUE|FALSE? '  smithing
   read -p 'WELLKNOWN PEERS, SEPARATED BY SPACE: ' peersInput
   echo
@@ -118,6 +130,10 @@ EOF
 
 cp $zbc_config ~/$zbc_dir/$zbc_config
 fi
+if [ ! -f ~/${zbc_dir}/${zbc_resource}/${zbc_node_key} ]; then 
+  read -p 'HAVE NODE`S SEED TO USE ? EMPTY WILL GENERATE ONE FOR YOU? ' nodeSeed
+  cd  ~/${zbc_dir} && ./${zbc_cmd_binary} node-admin node-key --node-seed "$nodeSeed"
+fi
 }
 
 
@@ -125,10 +141,7 @@ if [ ! -d ~/$zbc_dir ]; then
   mkdir ~/$zbc_dir
 fi
 
-if checking_depends; then 
+ if install_curl; download_binary; checking_depends; then 
+#if checking_depends; then 
   echo "FINISH, SMITTHING TRUE AS DEFAULT. CHECK INSIDE ~/$zbc_dir/$zbc_config"
 fi
-#if install_curl; download_binary; then
-  #cd ~/${zbc_dir} && ./$zbc_binary
-##	printf "Finish\nNow run the app"
-#fi
