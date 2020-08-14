@@ -95,7 +95,7 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
   esac
 
   # shellcheck disable=SC2162
-  read -p 'PEER PORT, 8001 as default: ' peerPort
+  read -p 'PEER PORT - [default: 8001, Press ENTER for default value: ' peerPort
   if [[ -n ${peerPort//[0-9]/} ]]; then
     echo "Invalid input, must be a number"
     exit 2
@@ -103,7 +103,7 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
   [ -z "$peerPort" ] && peerPort=8001
 
   # shellcheck disable=SC2162
-  read -p 'API RPC PORT, 7000 as default: ' apiRPCPort
+  read -p 'API RPC PORT - [default: 7000], Press ENTER for default value: ' apiRPCPort
   if [[ -n ${apiRPCPort//[0-9]/} ]]; then
     echo "Invalid input, must be a number"
     exit 2
@@ -111,7 +111,7 @@ if [ ! -f ~/${zbc_dir}/${zbc_config} ]; then
   [ -z "$apiRPCPort" ] && apiRPCPort=7000
 
   # shellcheck disable=SC2162
-  read -p 'API HTTP PORT, 7001 as default: ' apiHTTPPort
+  read -p 'API HTTP PORT [default: 7001], Press ENTER for default value: ' apiHTTPPort
   if [[ -n ${apiHTTPPort//[0-9]/} ]]; then
     echo "Invalid input, must be a number"
     exit 2
@@ -157,7 +157,7 @@ fi
 
 if [ ! -f ~/${zbc_dir}/${zbc_resource}/${zbc_node_key} ]; then 
   # shellcheck disable=SC2162
-  read -p 'HAVE NODE`S SEED TO USE ? EMPTY WILL GENERATE ONE FOR YOU? ' nodeSeed
+  read -p 'HAVE NODE`S SEED TO USE ? PRESS ENTER TO LET US GENERATE RANDOM FOR YOU ' nodeSeed
   cd  ~/${zbc_dir} && ./${zbc_cmd_binary} node-admin node-key --node-seed "$nodeSeed"
 fi
 }
@@ -175,5 +175,5 @@ fi
 
  if install_curl; download_binary; checking_depends; then 
 #if checking_depends; then 
-  echo "FINISH, SMITHING TRUE AS DEFAULT. CHECK INSIDE ~/$zbc_dir/$zbc_config"
+  echo "FINISH, SMITHING TRUE AS DEFAULT. CHECK INSIDE ~/$zbc_dir"
 fi
