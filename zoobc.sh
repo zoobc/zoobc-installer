@@ -22,9 +22,9 @@ ownerAccountAddress=
 nodeSeed=
 target=$1
 # shellcheck disable=SC2140
-alpha=["139.162.109.87:8001","172.104.84.98:8001","139.162.77.52:8001"]
+alpha='["139.162.109.87:8001","172.104.84.98:8001","139.162.77.52:8001"]'
 # shellcheck disable=SC2140
-dev=["172.104.34.10:8001","45.79.39.58:8001","85.90.246.90:8001"]
+dev='["172.104.34.10:8001","45.79.39.58:8001","85.90.246.90:8001"]'
 
 # join array by limiter
 function join_by { local IFS="$1"; shift; echo "$*"; }
