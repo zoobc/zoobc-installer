@@ -7,6 +7,7 @@ zbc_resource=resource
 wallet_cert=wallet.zbc
 target=$1
 
+# get_platform just inform what kind os version
 function get_platform() {
   os="$(uname)"
   case $os in
@@ -33,7 +34,7 @@ function get_platform() {
   echo "$os"
 }
 
-# checking curl
+# install_curl checking curl
 function install_curl() {
   if ! curl --version &>/dev/null; then
     echo 'DOWNLOADING CURL ...'
@@ -48,7 +49,7 @@ function install_curl() {
   fi
 }
 
-# downloading binary file from host
+# download_binary downloading binary file from host
 function download_binary() {
   if [ ! -f ~/${zbc_dir}/${zbc_binary} ]; then
     echo "DOWNLOADING ZOOBC BINARY ..."
@@ -64,16 +65,86 @@ function download_binary() {
   fi
 }
 
+# generate_service will generate service script to systemd called zoobc.service
+function generate_service() {
+  case $(get_platform) in
+  'linux')
+    cat >zoobc.service <<EOF
+[Unit]
+Description=zoobc node service
+[Service]
+Type=simple
+User=root
+Group=root
+#emergency (0), alert (1), critical (2), error (3), warning (4), notice (5), info (6), and debug (6)
+LogLevelMax=3
+WorkingDirectory=~/zoobc
+ExecStart=~/zoobc/zoobc --debug --cpu-profile
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp zoobc.service /etc/system/systemd/zoobc.service
+    systemctl daemon-reload
+    ;;
+  'darwin')
+    cat >zoobc.node.list <<EOF
+<?xml version"1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>zoobc.node</string>
+  <key>Program</key>
+  <string>~/zoobc/zoobc</string>
+  <key>ServiceDescription</key>
+  <string>ZOOBC NODE Service zoobc.com</string>
+  <key>UserName</key>
+  <string>root</string>
+  <key>GroupName</key>
+  <string>root</string>
+</dict>
+</plist>
+EOF
+    sudo cp zoobc.node.list /Library/LaunchDaemons
+    sudo lauchctl load /Library/LaunchDaemons/zoobc.node.plist
+    ;;
+  *)
+    echo "For $(get_platform) please check on zoobc.com for more detail"
+    ;;
+  esac
+}
+
+function start_service() {
+  case $(get_platform) in
+  'darwin')
+    sudo lauchctl start zoobc.node
+    ;;
+  'linux')
+    service zoobc start
+    ;;
+  *)
+    echo "For $(get_platform) please check on zoobc.com for more detail"
+    ;;
+  esac
+}
+################
+# MAIN PROCESS #
+################
 if [[ $target =~ dev|staging|alpha|beta ]]; then
   # checking zoobc directory
   [ -f "./${wallet_cert}" ] && cp wallet.zbc ~/${zbc_dir}/${wallet_cert}
   [ ! -d ~/$zbc_dir ] && mkdir ~/$zbc_dir
-  [ ! -d ~/$zbc_dir/$zbc_resource ] && mkdir ~/$zbc_dir/$zbc_resource 
+  [ ! -d ~/$zbc_dir/$zbc_resource ] && mkdir ~/$zbc_dir/$zbc_resource
   if
     install_curl
     download_binary
   then
     cd ~/${zbc_dir} && ./${zbc_cmd_binary} configure -t="$target"
+    generate_service
+    start_service
   fi
 else
   echo 'usage: sh ./installer.sh dev|staging|alpha'
