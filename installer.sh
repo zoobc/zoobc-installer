@@ -93,26 +93,32 @@ EOF
     ;;
   'darwin')
     if [ ! -f /Library/LaunchDaemons/zoobc.node.plist ]; then
-      cat >zoobc.node.list <<EOF
+      cat >org.zoobc.node.plist <<EOF
 <?xml version"1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>zoobc.node</string>
-  <key>Program</key>
-  <string>~/zoobc/zoobc</string>
+  <string>org.zoobc.node</string>
   <key>ServiceDescription</key>
   <string>ZOOBC NODE Service zoobc.com</string>
+  <key>WorkingDirectory</key>
+  <string>$HOME/zoobc</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>./zoobc</string>
+  </array>
   <key>UserName</key>
   <string>root</string>
   <key>GroupName</key>
   <string>root</string>
+  <key>KeepAlive</key>
+  <true/>
 </dict>
 </plist>
 EOF
-      sudo cp zoobc.node.list /Library/LaunchDaemons
-      sudo lauchctl load /Library/LaunchDaemons/zoobc.node.plist
+      sudo cp org.zoobc.node.plist /Library/LaunchDaemons
+      sudo launchctl load /Library/LaunchDaemons/org.zoobc.node.plist
     fi
     ;;
   *)
@@ -124,7 +130,7 @@ EOF
 function start_service() {
   case $(get_platform) in
   'darwin')
-    sudo lauchctl start zoobc.node
+    sudo launchctl start zoobc.node
     ;;
   'linux')
     service zoobc start
