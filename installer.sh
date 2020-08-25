@@ -67,6 +67,7 @@ function download_binary() {
 
 # generate_service will generate service script to systemd called zoobc.service
 function generate_service() {
+  echo 'Generating daemon service ...'
   case $(get_platform) in
   'linux')
     if [ ! -f "/lib/systemd/system/zoobc.service" ]; then
@@ -92,8 +93,8 @@ EOF
     fi
     ;;
   'darwin')
-    if [ ! -f /Library/LaunchDaemons/zoobc.node.plist ]; then
-      cat >org.zoobc.node.plist <<EOF
+    if [ ! -f /Library/LaunchDaemons/org.zoobc.startup.plist ]; then
+      cat >org.zoobc.startup.plist <<EOF
 <?xml version"1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -112,13 +113,15 @@ EOF
   <string>root</string>
   <key>GroupName</key>
   <string>root</string>
+  <key>RunAtLoad</key>
+  <true/>
   <key>KeepAlive</key>
   <true/>
 </dict>
 </plist>
 EOF
-      sudo cp org.zoobc.node.plist /Library/LaunchDaemons
-      sudo launchctl load /Library/LaunchDaemons/org.zoobc.node.plist
+      sudo cp org.zoobc.startup.plist /Library/LaunchDaemons
+      launchctl load /Library/LaunchDaemons/org.zoobc.startup.plist
     fi
     ;;
   *)
@@ -128,9 +131,10 @@ EOF
 }
 
 function start_service() {
+  echo "Starting Service ..."
   case $(get_platform) in
   'darwin')
-    sudo launchctl start zoobc.node
+    launchctl load /Library/LaunchDaemons/org.zoobc.startup.plist
     ;;
   'linux')
     service zoobc start
