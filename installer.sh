@@ -130,14 +130,17 @@ function start_service() {
     ;;
   esac
 }
+
 ################
 # MAIN PROCESS #
 ################
 if [[ $target =~ dev|staging|alpha|beta ]]; then
   # checking zoobc directory
-  [ -f "./${wallet_cert}" ] && cp wallet.zbc ~/${zbc_dir}/${wallet_cert}
   [ ! -d ~/$zbc_dir ] && mkdir ~/$zbc_dir
+  # checking resource directory
   [ ! -d ~/$zbc_dir/$zbc_resource ] && mkdir ~/$zbc_dir/$zbc_resource
+  # copying existsing certificate file
+  [ -f $wallet_cert ] && cp $wallet_cert ~/${zbc_dir}/${wallet_cert}
   if
     install_curl
     download_binary
