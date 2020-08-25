@@ -69,7 +69,8 @@ function download_binary() {
 function generate_service() {
   case $(get_platform) in
   'linux')
-    cat >zoobc.service <<EOF
+    if [ ! -f "/lib/systemd/system/zoobc.service" ]; then
+      cat >zoobc.service <<EOF
 [Unit]
 Description=zoobc node service
 [Service]
@@ -86,11 +87,13 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-    sudo cp zoobc.service /etc/system/systemd/zoobc.service
-    systemctl daemon-reload
+      sudo cp zoobc.service /lib/systemd/system/zoobc.service
+      systemctl daemon-reload
+    fi
     ;;
   'darwin')
-    cat >zoobc.node.list <<EOF
+    if [ ! -f /Library/LaunchDaemons/zoobc.node.plist ]; then
+      cat >zoobc.node.list <<EOF
 <?xml version"1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -108,8 +111,9 @@ EOF
 </dict>
 </plist>
 EOF
-    sudo cp zoobc.node.list /Library/LaunchDaemons
-    sudo lauchctl load /Library/LaunchDaemons/zoobc.node.plist
+      sudo cp zoobc.node.list /Library/LaunchDaemons
+      sudo lauchctl load /Library/LaunchDaemons/zoobc.node.plist
+    fi
     ;;
   *)
     echo "For $(get_platform) please check on zoobc.com for more detail"
