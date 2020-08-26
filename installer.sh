@@ -121,7 +121,6 @@ EOF
 </plist>
 EOF
       sudo cp org.zoobc.startup.plist /Library/LaunchDaemons
-      launchctl load /Library/LaunchDaemons/org.zoobc.startup.plist
     fi
     ;;
   *)
@@ -160,8 +159,7 @@ if [[ $target =~ dev|staging|alpha|beta ]]; then
     download_binary
   then
     cd $HOME/${zbc_dir} && ./${zbc_cmd_binary} configure -t="$target"
-    generate_service
-    start_service
+    generate_service && echo 'Installation finish, read readme to start the node'
   fi
 else
   echo 'usage: sh ./installer.sh dev|staging|alpha|beta'
