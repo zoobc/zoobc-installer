@@ -18,7 +18,7 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
       - MacOS: `launchctl unload /Library/LaunchDaemons/org.zoobc.startup.plist`
       - Linux: `service zoobc stop`
     - Run binary file:
-      - `cd $HOME/zoobc{dev|staging|alpha|beta}`
+      - `cd $HOME/zoobc.{dev|staging|alpha|beta}`
       - `./zoobc`
     - Stop binary file:
       - kill process `CTRL+c`
