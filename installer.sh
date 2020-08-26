@@ -155,7 +155,18 @@ if [[ $target =~ dev|staging|alpha|beta ]]; then
     download_binary
   then
     cd $HOME/${zbc_dir} && ./${zbc_cmd_binary} configure -t="$target"
-    generate_service && echo 'Installation finish, read readme to start the node'
+    generate_service
+    echo "Installation finish."
+    case $(get_platform) in
+    'linux')
+      echo "To running daemon: service zoobc start"
+      ;;
+    'darwin')
+      echo "To running daemon: launchctl load /Library/LaunchDaemons/org.zoobc.startup.plist"
+      ;;
+    *) ;;
+    esac
+    echo "Or running manually: go to $HOME/{zbc_dir} and run ./${zbc_binary}"
   fi
 else
   echo 'usage: sh ./installer.sh dev|staging|alpha|beta'
