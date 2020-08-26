@@ -22,7 +22,7 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
       - `./zoobc`
     - Stop binary file:
       - kill process `CTRL+c`
-> The script will create directory `zoobc` on the `$HOME`.
+> The script will create directory `zoobc.{target}` on the `$HOME`.
 
 ## Compatiibility
 - [x] MacOS
