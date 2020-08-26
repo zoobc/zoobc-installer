@@ -40,7 +40,7 @@ function install_curl() {
     echo 'DOWNLOADING CURL ...'
     case $(get_platform) in
     'mac')
-      brew insatll curl
+      brew install curl
       ;;
     'linux')
       apt install curl -y
@@ -51,17 +51,17 @@ function install_curl() {
 
 # download_binary downloading binary file from host
 function download_binary() {
-  if [ ! -f ~/${zbc_dir}/${zbc_binary} ]; then
+  if [ ! -f $HOME/${zbc_dir}/${zbc_binary} ]; then
     echo "DOWNLOADING ZOOBC BINARY ..."
     # shellcheck disable=SC2046
-    cd ~/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_binary
-    chmod 755 ~/${zbc_dir}/${zbc_binary}
+    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_binary
+    chmod 755 $HOME/${zbc_dir}/${zbc_binary}
   fi
-  if [ ! -f ~/${zbc_dir}/${zbc_cmd_binary} ]; then
+  if [ ! -f $HOME/${zbc_dir}/${zbc_cmd_binary} ]; then
     echo "DOWNLOADING ZOOBC CMD BINARY ..."
     # shellcheck disable=SC2046
-    cd ~/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_cmd_binary
-    chmod 755 ~/${zbc_dir}/${zbc_cmd_binary}
+    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_cmd_binary
+    chmod 755 $HOME/${zbc_dir}/${zbc_cmd_binary}
   fi
 }
 
@@ -80,8 +80,8 @@ User=root
 Group=root
 #emergency (0), alert (1), critical (2), error (3), warning (4), notice (5), info (6), and debug (6)
 LogLevelMax=3
-WorkingDirectory=~/zoobc
-ExecStart=~/zoobc/zoobc --debug --cpu-profile
+WorkingDirectory=$HOME/zoobc
+ExecStart=$HOME/zoobc/zoobc --debug --cpu-profile
 Restart=on-failure
 RestartSec=3
 
@@ -150,19 +150,19 @@ function start_service() {
 ################
 if [[ $target =~ dev|staging|alpha|beta ]]; then
   # checking zoobc directory
-  [ ! -d ~/$zbc_dir ] && mkdir ~/$zbc_dir
+  [ ! -d $HOME/$zbc_dir ] && mkdir $HOME/$zbc_dir
   # checking resource directory
-  [ ! -d ~/$zbc_dir/$zbc_resource ] && mkdir ~/$zbc_dir/$zbc_resource
+  [ ! -d $HOME/$zbc_dir/$zbc_resource ] && mkdir $HOME/$zbc_dir/$zbc_resource
   # copying existsing certificate file
-  [ -f $wallet_cert ] && cp $wallet_cert ~/${zbc_dir}/${wallet_cert}
+  [ -f $wallet_cert ] && cp $wallet_cert $HOME/${zbc_dir}/${wallet_cert}
   if
     install_curl
     download_binary
   then
-    cd ~/${zbc_dir} && ./${zbc_cmd_binary} configure -t="$target"
+    cd $HOME/${zbc_dir} && ./${zbc_cmd_binary} configure -t="$target"
     generate_service
     start_service
   fi
 else
-  echo 'usage: sh ./installer.sh dev|staging|alpha'
+  echo 'usage: sh ./installer.sh dev|staging|alpha|beta'
 fi
