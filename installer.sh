@@ -100,7 +100,7 @@ EOF
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>org.zoobc.node</string>
+  <string>org.zoobc.startup</string>
   <key>ServiceDescription</key>
   <string>ZOOBC NODE Service zoobc.com</string>
   <key>WorkingDirectory</key>
