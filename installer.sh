@@ -54,13 +54,13 @@ function download_binary() {
   if [ ! -f $HOME/${zbc_dir}/${zbc_binary} ]; then
     echo "DOWNLOADING ZOOBC BINARY ..."
     # shellcheck disable=SC2046
-    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_binary
+    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$target/$(get_platform)/$zbc_binary
     chmod 755 $HOME/${zbc_dir}/${zbc_binary}
   fi
   if [ ! -f $HOME/${zbc_dir}/${zbc_cmd_binary} ]; then
     echo "DOWNLOADING ZOOBC CMD BINARY ..."
     # shellcheck disable=SC2046
-    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$(get_platform)/$zbc_cmd_binary
+    cd $HOME/${zbc_dir} && curl -O http://172.104.47.168/$target/$(get_platform)/$zbc_cmd_binary
     chmod 755 $HOME/${zbc_dir}/${zbc_cmd_binary}
   fi
 }
