@@ -9,6 +9,7 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
    - Upload to server:
        - scp: `scp wallet.zbc {user}@{ip_address}:/{installation_path}`
 3. Run installation script:
+    <br>`chmod +x installer.sh`
     <br>`./installer.sh`
 4. To run the node:
    - Daemon start:
