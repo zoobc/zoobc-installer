@@ -11,20 +11,32 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
 3. Run installation script:
     <br>`./installer.sh`
 4. To run the node:
-   - Daemon start:
-      - MacOS: `launchctl load /Library/LaunchDaemons/org.zoobc.startup.plist`
-      - Linux: `service zoobc start`
-   - Daemon stop:
-      - MacOS: `launchctl unload /Library/LaunchDaemons/org.zoobc.startup.plist`
-      - Linux: `service zoobc stop`
+   - **Install daemon**:
+      - sudo ./zoobc daemon install
+   - **Start Daemon**:
+      - `sudo ./zoobc daemon start`
+   - **Stop Daemon**:
+      - `sudo ./zoobc daemon stop`
+    - **Status Daemon**:
+      - `sudo ./zoobc daemon status`
     - Run binary file:
       - `cd $HOME/zoobc.{dev|staging|alpha|beta}`
-      - `./zoobc`
+      - `./zoobc run`
     - Stop binary file:
       - kill process `CTRL+c`
-> The script will create directory `zoobc.{target}` on the `$HOME`.
 
-## Compatiibility
+## Result
+The script will create directory `zoobc.{target}` on the `$HOME`. There are several files:
+```sh
+~/zoobc
+├── zoobc #binary
+├── cmd #binary
+├── config.toml
+└── resource
+    ├── node_keys.json
+```
+
+## Compatibility
 - [x] MacOS
 - [x] Linux
-- [ ] Windows 
+- [x] Windows 
