@@ -4,7 +4,7 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
 
 ## How To
 1. You can clone this repo or just download the raw format.
-   <br>via curl: `curl https://raw.githubusercontent.com/zoobc/zoobc-installer/remove-service-generator/installer.sh -o installer.sh` and also make sure the file permission `chmod +x installer.sh`
+   <br>via curl: `curl https://raw.githubusercontent.com/zoobc/zoobc-installer/master/installer.sh -o installer.sh` and also make sure the file permission `chmod +x installer.sh`
 2. Copy the certificate file `wallet.zbc` on the same directory with the `installer.sh` file.
    - Upload to server:
        - scp: `scp wallet.zbc {user}@{ip_address}:/{installation_path}`
@@ -29,8 +29,8 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
 The script will create directory `zoobc.{target}` on the `$HOME`. There are several files:
 ```sh
 ~/zoobc
-├── zoobc
-├── cmd
+├── zoobc #binary
+├── cmd #binary
 ├── config.toml
 └── resource
     ├── node_keys.json
@@ -39,4 +39,4 @@ The script will create directory `zoobc.{target}` on the `$HOME`. There are seve
 ## Compatibility
 - [x] MacOS
 - [x] Linux
-- [ ] Windows 
+- [x] Windows 
