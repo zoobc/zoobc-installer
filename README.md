@@ -14,6 +14,9 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
        - via scp: `scp wallet.zbc {user}@{ip_address}:{installation_path}`
 ## Run installation
 5. Run installation script: `./installer.sh {beta|alpha|staging|dev}` and follow the prompt.
+
+![](installation.gif)
+
 ## Running binary
 6. To run the node:
    - **Install daemon**:
