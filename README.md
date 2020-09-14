@@ -20,7 +20,7 @@ ZooBC installation script based on bashscript for help user to install ZooBC nod
 ## Running binary
 6. To run the node:
    - **Install daemon**:
-      - sudo ./zoobc daemon install
+      - sudo ./zoobc daemon install --debug
    - **Start Daemon**:
       - `sudo ./zoobc daemon start`
    - **Stop Daemon**:
