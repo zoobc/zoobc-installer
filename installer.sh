@@ -4,7 +4,6 @@ zbc_dir=zoobc
 zbc_binary=zoobc
 zbc_cmd_binary=zcmd
 zbc_resource=resource
-wallet_cert=wallet.zbc
 target=$1
 
 # get_platform just inform what kind os version
@@ -50,7 +49,7 @@ function install_curl() {
 }
 
 # get_dir_target to get joined target directory
-function get_dir_target(){
+function get_dir_target() {
   echo "$HOME/$zbc_dir.$target"
 }
 # download_binary downloading binary file from host
@@ -69,11 +68,18 @@ function download_binary() {
 # MAIN PROCESS #
 ################
 if [[ $target =~ dev|staging|alpha|beta ]]; then
+  if [ $(ls *.zbc | wc -l) -gt 1 ]; then
+    echo "To many *.zbc files found, please leave it one."
+    exit
+  fi
+  echo $(find *.zbc)
+
   # checking zoobc directory
   [ ! -d "$(get_dir_target)" ] && mkdir "$(get_dir_target)"
-  # checking resource directory
+  # # checking resource directory
   [ ! -d "$(get_dir_target)/$zbc_resource" ] && mkdir "$(get_dir_target)/$zbc_resource"
   # copying existing certificate file
+  wallet_cert=$(find *.zbc)
   [ -f $wallet_cert ] && cp $wallet_cert "$(get_dir_target)/$wallet_cert"
   if
     install_curl
