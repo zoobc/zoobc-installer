@@ -40,7 +40,7 @@ function install_curl() {
     echo 'DOWNLOADING CURL ...'
     case $(get_platform) in
     'mac')
-      brew insatll curl
+      brew install curl
       ;;
     'linux')
       apt install curl -y
@@ -148,7 +148,7 @@ function start_service() {
 ################
 # MAIN PROCESS #
 ################
-if [[ $target =~ dev|staging|alpha|beta ]]; then
+if [[ $target =~ dev|staging|alpha|beta|mainnet ]]; then
   # checking zoobc directory
   [ ! -d ~/$zbc_dir ] && mkdir ~/$zbc_dir
   # checking resource directory
@@ -164,5 +164,5 @@ if [[ $target =~ dev|staging|alpha|beta ]]; then
     start_service
   fi
 else
-  echo 'usage: sh ./installer.sh dev|staging|alpha'
+  echo 'usage: sh ./installer.sh dev|staging|alpha|mainnet'
 fi
