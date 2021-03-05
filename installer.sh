@@ -67,7 +67,7 @@ function download_binary() {
 ################
 # MAIN PROCESS #
 ################
-if [[ $target =~ dev|staging|alpha|beta ]]; then
+if [[ $target =~ dev|staging|alpha|beta|mainnet ]]; then
   if [ $(ls *.zbc | wc -l) -gt 1 ]; then
     echo "To many *.zbc files found, please leave it one."
     exit
@@ -90,5 +90,5 @@ if [[ $target =~ dev|staging|alpha|beta ]]; then
     echo "How to run: cd $(get_dir_target) && ./$zbc_binary run"
   fi
 else
-  echo 'usage: sh ./installer.sh dev|staging|alpha|beta'
+  echo 'usage: sh ./installer.sh dev|staging|alpha|beta|mainnet'
 fi
