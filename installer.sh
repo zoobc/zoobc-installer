@@ -57,11 +57,12 @@ function download_binary() {
   echo "DOWNLOADING ZOOBC BINARY ..."
   # shellcheck disable=SC2046
   cd $(get_dir_target) && curl -O http://172.104.47.168/"$target"/$(get_platform)/$zbc_binary
-  chmod 755 "$(get_dir_target)/$zbc_binary"
   echo "DOWNLOADING ZOOBC CMD BINARY ..."
   # shellcheck disable=SC2046
-  cd $(get_dir_target) && curl -O http://172.104.47.168/"$target"/$(get_platform)/$zbc_cmd_binary
-  chmod 755 "$(get_dir_target)/$zbc_cmd_binary"
+  curl -O http://172.104.47.168/"$target"/$(get_platform)/$zbc_cmd_binary
+  sleep 5
+  chmod 755 "$zbc_binary"
+  chmod 755 "$zbc_cmd_binary"
 }
 
 ################
@@ -86,6 +87,8 @@ if [[ $target =~ dev|staging|alpha|beta|mainnet ]]; then
     download_binary
   then
     cd "$(get_dir_target)"
+    chmod 755 "$zbc_cmd_binary"
+    chmod 755 "$zbc_binary"
     ./$zbc_cmd_binary configure -t="$target"
     echo "Installation finish."
     echo "How to run: cd $(get_dir_target) && ./$zbc_binary run"
