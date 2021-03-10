@@ -57,11 +57,11 @@ function download_binary() {
   echo "DOWNLOADING ZOOBC BINARY ..."
   # shellcheck disable=SC2046
   cd $(get_dir_target) && curl -O http://172.104.47.168/"$target"/$(get_platform)/$zbc_binary
-  chmod +x "$(get_dir_target)/$zbc_binary"
+  chmod 755 "$(get_dir_target)/$zbc_binary"
   echo "DOWNLOADING ZOOBC CMD BINARY ..."
   # shellcheck disable=SC2046
   cd $(get_dir_target) && curl -O http://172.104.47.168/"$target"/$(get_platform)/$zbc_cmd_binary
-  chmod +x "$(get_dir_target)/$zbc_cmd_binary"
+  chmod 755 "$(get_dir_target)/$zbc_cmd_binary"
 }
 
 ################
