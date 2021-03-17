@@ -91,7 +91,11 @@ if [[ $target =~ dev|staging|alpha|beta|mainnet ]]; then
     chmod 755 "$zbc_binary"
     ./$zbc_cmd_binary configure -t="$target"
     echo "Installation finish."
-    echo "How to run: cd $(get_dir_target) && ./$zbc_binary run"
+    echo "How to run:"
+    echo "sudo $(get_dir_target)/$zbc_binary daemon install --debug"
+    echo "sudo $(get_dir_target)/$zbc_binary daemon start --debug"
+    echo ""
+    echo "note: --debug enables node's metrics monitoring (by default on port 9090)"
   fi
 else
   echo 'usage: sh ./installer.sh dev|staging|alpha|beta|mainnet'
