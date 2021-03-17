@@ -95,7 +95,9 @@ if [[ $target =~ dev|staging|alpha|beta|mainnet ]]; then
     echo "sudo $(get_dir_target)/$zbc_binary daemon install --debug"
     echo "sudo $(get_dir_target)/$zbc_binary daemon start --debug"
     echo ""
-    echo "note: --debug enables node's metrics monitoring (by default on port 9090)"
+    echo "note:"
+    echo "* --debug enables node's metrics monitoring (by default on port 9090)"
+    echo "* if ssh into this server or logged in as root user, there's no need to use sudo (it can be removed from above commands)"
   fi
 else
   echo 'usage: sh ./installer.sh dev|staging|alpha|beta|mainnet'
